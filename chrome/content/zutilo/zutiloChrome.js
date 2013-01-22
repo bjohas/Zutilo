@@ -21,7 +21,7 @@ Components.utils.import("chrome://zutilo/content/zutilo.jsm");
  * ZutiloChrome namespace.
  */
 if ("undefined" == typeof(ZutiloChrome)) {
-  var ZutiloChrome = {};
+  window.ZutiloChrome = {};
 };
 
 ZutiloChrome.showUpgradeMessage = function() {

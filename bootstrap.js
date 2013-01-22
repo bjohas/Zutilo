@@ -5,13 +5,27 @@
 
 "use strict";
 
+Components.utils.import("resource://gre/modules/Services.jsm");
+
+const BOOTSTRAP_REASONS = [
+    "", // the bootstrap reason is 1 based
+    "APP_STARTUP",
+    "APP_SHUTDOWN",
+    "ADDON_ENABLE",
+    "ADDON_DISABLE",
+    "ADDON_INSTALL",
+    "ADDON_UNINSTALL",
+    "ADDON_UPGRADE",
+    "ADDON_DOWNGRADE"
+];
+
 function install(data, reason) {
 	
 }
 
 function startup(data, reason) {
 	Components.utils.import("chrome://zutilo/content/zutilo.jsm");
-	Zutilo.init(reason);
+	Zutilo.init();
 }
 
 function shutdown(data, reason) {
@@ -19,10 +33,7 @@ function shutdown(data, reason) {
 		return;
 	}
 	
-	if (ZutiloChrome.zoteroOverlay) {
-		ZutiloChrome.zoteroOverlay.cleanup();
-	}
-	
+	Zutilo.shutdown();
 	Components.utils.unload("chrome://zutilo/content/zutilo.jsm");
 }
 

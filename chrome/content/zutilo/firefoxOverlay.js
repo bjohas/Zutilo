@@ -24,7 +24,7 @@ Components.utils.import("chrome://zutilo/content/zutilo.jsm");
  * ZutiloChrome namespace.
  */
 if ("undefined" == typeof(ZutiloChrome)) {
-  var ZutiloChrome = {};
+  window.ZutiloChrome = {};
 };
 
 ZutiloChrome.firefoxOverlay = {
@@ -61,7 +61,7 @@ ZutiloChrome.firefoxOverlay = {
 ///////////////////////////////////////////
 // Firefox start up
 ///////////////////////////////////////////
-
+/*
 window.addEventListener('load', function(e) {
 		ZutiloChrome.firefoxOverlay.init(); 
-	}, false);
+	}, false);*/

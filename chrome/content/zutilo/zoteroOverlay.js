@@ -11,7 +11,7 @@ Components.utils.import("chrome://zutilo/content/zutilo.jsm");
  * ZutiloChrome namespace.
  */
 if ("undefined" == typeof(ZutiloChrome)) {
-  var ZutiloChrome = {};
+  window.ZutiloChrome = {};
 };
 
 ZutiloChrome.zoteroOverlay = {
@@ -28,6 +28,7 @@ ZutiloChrome.zoteroOverlay = {
 		
 		ZutiloChrome.showUpgradeMessage();
 		
+		this.staticOverlay();
 		this.zoteroItemPopup();
 	},
 	
@@ -296,14 +297,17 @@ ZutiloChrome.zoteroOverlay = {
 	
 	//
 	staticOverlay: function() {
+		
+		// Add Zutilo preferences item to Zotero actions menu
 		var zutiloMenuItem = document.createElement("menuitem");
 		zutiloMenuItem.setAttribute("id","zutilo-zotero-actions-preferences");
 		zutiloMenuItem.setAttribute("label",
 			Zutilo._bundle.GetStringFromName("zutilo.zotero.actions.preferences"));
-		zutiloMenuItem.setAttribute("command","ZutiloChrome.openPreferences()");
-		zutiloMenuItem.setAttribute("insertafter","zotero-tb-actions-prefs");
+		zutiloMenuItem.setAttribute("oncommand","ZutiloChrome.openPreferences()");
 		var zoteroActionMenu=document.getElementById("zotero-tb-actions-popup");
-		zoteroActionMenu.appendChild(zutiloMenuItem);
+		var zoteroPrefsItem = 
+			document.getElementById("zotero-tb-actions-prefs");
+		zoteroActionMenu.insertBefore(zutiloMenuItem, zoteroPrefsItem.nextSibling);
 	},
 	
 	///////////////////////////////////////////
@@ -578,9 +582,9 @@ Zotero.Zutilo.addTagGUI=ZutiloChrome.zoteroOverlay.warnOldFunctions;
 Zotero.Zutilo.addRelatedGUI=ZutiloChrome.zoteroOverlay.warnOldFunctions;
 
 // Initialize the utility
-window.addEventListener('load', function(e) {
+/*window.addEventListener('load', function(e) {
 		ZutiloChrome.zoteroOverlay.init(); 
-	}, false);
+	}, false);*/
 window.addEventListener('unload', function(e) {
 		ZutiloChrome.zoteroOverlay.cleanup(); 
 	}, false);

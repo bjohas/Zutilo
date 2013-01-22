@@ -27,6 +27,25 @@ switch (appInfo.ID) {
 		var appName = 'Unknown';
 }
 
+var windowListener = {
+    onOpenWindow: function(xulWindow) {
+        var domWindow = xulWindow
+            .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+            .getInterface(Components.interfaces.nsIDOMWindowInternal);
+
+        domWindow.addEventListener('load', function listener() {
+            domWindow.removeEventListener('load',listener,false);
+
+            if (domWindow.document.documentElement.getAttribute('windowtype') == 'navigator:browser')
+                Zutilo.loadWindowScripts(domWindow);
+        },false);
+    },
+
+    onCloseWindow: function(xulWindow) {},
+
+    onWindowTitleChange: function(xulWindow, newTitle) {}
+};
+
 /**
  * Zutilo namespace.
  */
@@ -47,30 +66,49 @@ var Zutilo = {
 	zoteroActive: true,
 	upgradeMessage: '',
 	
-	init: function(reason) {
+	init: function() {
 		Zutilo.Prefs.init();
 		//Zutilo.ZoteroPrefs.init();
 		this.checkIfUpgraded();
+		
+		var windows = Services.wm.getEnumerator('navigator:browser');
+		while (windows.hasMoreElements()) {
+			this.loadWindowScripts(windows.getNext());
+		}
+			
+		Services.wm.addListener(windowListener);
+	},
+	
+	loadWindowScripts: function(scope) {
+	// initBool: if true, run scripts' init() functions since the windows are already 
+	// 		loaded and the load event listener won't fire.
 		Services.scriptloader.loadSubScript(
-				'chrome://zutilo/content/zutiloChrome.js');
+				'chrome://zutilo/content/zutiloChrome.js', scope);
 				
 		if (Zutilo._appName == 'Firefox') {
 			// Firefox specific setup
 			Services.scriptloader.loadSubScript(
-				'chrome://zutilo/content/firefoxOverlay.js');
-			if (reason != APP_STARTUP) {
-				ZutiloChrome.firefoxOverlay.init();
-			}
+				'chrome://zutilo/content/firefoxOverlay.js', scope);
+			scope.ZutiloChrome.firefoxOverlay.init();
 		}
 		
 		if (Zutilo.zoteroActive) {
 			// Zotero specific setup
 			Services.scriptloader.loadSubScript(
-				'chrome://zutilo/content/zoteroOverlay.js');
-				
-			if (reason != APP_STARTUP) {
-				ZutiloChrome.zoteroOverlay.init();
+				'chrome://zutilo/content/zoteroOverlay.js', scope);
+			scope.ZutiloChrome.zoteroOverlay.init();
+		}
+	},
+	
+	shutdown: function() {
+		var windows = Services.wm.getEnumerator('navigator:browser');
+		while (windows.hasMoreElements()) {
+			var tempWin = windows.getNext();
+			if (tempWin.ZutiloChrome.zoteroOverlay) {
+				tempWin.ZutiloChrome.zoteroOverlay.cleanup();
 			}
+			delete tempWin.ZutiloChrome;
+			delete tempWin.Zutilo;
 		}
 	},
 	
@@ -121,6 +159,7 @@ Zutilo.Prefs = {
 		
 		// Register observer to handle pref changes
 		this.register();
+		this.setDefaults();
 	},
 	
 	setDefaults: function() {
