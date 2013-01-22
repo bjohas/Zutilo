@@ -294,6 +294,18 @@ ZutiloChrome.zoteroOverlay = {
 		return true;
 	},
 	
+	//
+	staticOverlay: function() {
+		var zutiloMenuItem = document.createElement("menuitem");
+		zutiloMenuItem.setAttribute("id","zutilo-zotero-actions-preferences");
+		zutiloMenuItem.setAttribute("label",
+			Zutilo._bundle.GetStringFromName("zutilo.zotero.actions.preferences"));
+		zutiloMenuItem.setAttribute("command","ZutiloChrome.openPreferences()");
+		zutiloMenuItem.setAttribute("insertafter","zotero-tb-actions-prefs");
+		var zoteroActionMenu=document.getElementById("zotero-tb-actions-popup");
+		zoteroActionMenu.appendChild(zutiloMenuItem);
+	},
+	
 	///////////////////////////////////////////
 	//Item menu functions
 	///////////////////////////////////////////
@@ -347,12 +359,14 @@ ZutiloChrome.zoteroOverlay = {
 			this._addPopupItems(zutiloSubmenuPopup,appSettings,'Zutilo');
 		}
 	},
+	
+	removeZoteroItemPopup: function() {
+		var zoteroItemmenu = document.getElementById("zotero-itemmenu");
+		this._removeLabeledChildren(zoteroItemmenu,'zutilo-itemmenu-');
+	},
 		
 	refreshZoteroItemPopup: function() {
-		var zoteroItemmenu = document.getElementById("zotero-itemmenu");
-		
-		this._removeLabeledChildren(zoteroItemmenu,'zutilo-itemmenu-');
-		
+		this.removeZoteroItemPopup();
 		this.zoteroItemPopup();
 	},
 		

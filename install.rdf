@@ -12,6 +12,7 @@
 		<em:type>2</em:type> <!-- type=extension -->
 		<em:iconURL>chrome://zutilo/skin/zutilo.png</em:iconURL>
 		<em:icon64URL>chrome://zutilo/skin/zutilo64.png</em:icon64URL>
+		<em:bootstrap>true</em:bootstrap>
     
 		<!-- Requires Firefox -->
 		<em:targetApplication>

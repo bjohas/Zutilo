@@ -19,11 +19,21 @@ Zutilo.Prefs = {
 		
 		// Register observer to handle pref changes
 		this.register();
-		
-		//Get all prefs from _itemmenuFunctions to make sure that they are defined.
+	},
+	
+	setDefaults: function() {
+		var defaults = Services.prefs.getDefaultBranch('extensions.zutilo.');
+
+		//Preferences for _itemmenuFunctions
 		for (var index=0;index<Zutilo._itemmenuFunctions.length;index++) {
-			Zutilo.Prefs.get('itemmenu.'+Zutilo._itemmenuFunctions[index],false);
+			defaults.setCharPref('itemmenu.'+Zutilo._itemmenuFunctions[index],'Zutilo');
 		}
+		//Other preferences
+		defaults.setBoolPref("warnZoteroNotActive",true);
+		defaults.setCharPref("lastVersion",'');
+		
+		//Not active yet
+		//defaults.setCharPref("customAttachmentPath", '');
 	},
 	
 	get: function(pref, global) {
@@ -52,14 +62,6 @@ Zutilo.Prefs = {
 			throw ('Invalid Zutilo pref call for ' + pref);
 		}
 		
-		if (!prefVal) {
-			var splitPref = pref.split('.');
-			if ((splitPref[0] == 'itemmenu') && 
-				(Zutilo._itemmenuFunctions.indexOf(splitPref[1]) != -1)) {
-				Zutilo.Prefs.set(pref,Zutilo._defaults.itemmenuAppearance);
-			}
-		}
-		
 		return prefVal;
 	},
 	
@@ -72,19 +74,6 @@ Zutilo.Prefs = {
 					return this.prefBranch.setCharPref(pref, value);
 				case this.prefBranch.PREF_INT:
 					return this.prefBranch.setIntPref(pref, value);
-				
-				// If not an existing pref, create appropriate type automatically
-				case 0:
-					if (typeof value == 'boolean') {
-						return this.prefBranch.setBoolPref(pref, value);
-					}
-					if (typeof value == 'string') {
-						return this.prefBranch.setCharPref(pref, value);
-					}
-					if (parseInt(value) == value) {
-						return this.prefBranch.setIntPref(pref, value);
-					}
-					throw ("Invalid preference value '" + value + "' for pref '" + pref + "'");
 			}
 		}
 		catch (e){
@@ -177,5 +166,3 @@ Zutilo.ZoteroPrefs = {
 };
 */
 
-Zutilo.Prefs.init();
-//Zutilo.ZoteroPrefs.init();
