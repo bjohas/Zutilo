@@ -61,7 +61,3 @@ ZutiloChrome.firefoxOverlay = {
 ///////////////////////////////////////////
 // Firefox start up
 ///////////////////////////////////////////
-/*
-window.addEventListener('load', function(e) {
-		ZutiloChrome.firefoxOverlay.init(); 
-	}, false);*/

@@ -34,6 +34,8 @@ ZutiloChrome.zoteroOverlay = {
 	
 	cleanup: function() {
 		this.itemmenuPrefObserver.unregister();
+		
+		this.removeXUL();
 	},
 	
 	///////////////////////////////////////////
@@ -295,7 +297,9 @@ ZutiloChrome.zoteroOverlay = {
 		return true;
 	},
 	
-	//
+	///////////////////////////////////////////
+	//XUL overlay functions
+	///////////////////////////////////////////
 	staticOverlay: function() {
 		
 		// Add Zutilo preferences item to Zotero actions menu
@@ -308,6 +312,13 @@ ZutiloChrome.zoteroOverlay = {
 		var zoteroPrefsItem = 
 			document.getElementById("zotero-tb-actions-prefs");
 		zoteroActionMenu.insertBefore(zutiloMenuItem, zoteroPrefsItem.nextSibling);
+	},
+	
+	removeXUL: function() {
+		this.removeZoteroItemPopup();
+		var zutiloPrefMenuItem=
+			document.getElementById("zutilo-zotero-actions-preferences");
+		zutiloPrefMenuItem.parentNode.removeChild(zutiloPrefMenuItem);
 	},
 	
 	///////////////////////////////////////////
@@ -582,9 +593,6 @@ Zotero.Zutilo.addTagGUI=ZutiloChrome.zoteroOverlay.warnOldFunctions;
 Zotero.Zutilo.addRelatedGUI=ZutiloChrome.zoteroOverlay.warnOldFunctions;
 
 // Initialize the utility
-/*window.addEventListener('load', function(e) {
-		ZutiloChrome.zoteroOverlay.init(); 
-	}, false);*/
 window.addEventListener('unload', function(e) {
 		ZutiloChrome.zoteroOverlay.cleanup(); 
 	}, false);
