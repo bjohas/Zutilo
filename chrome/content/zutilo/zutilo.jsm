@@ -110,6 +110,9 @@ var Zutilo = {
 			delete tempWin.ZutiloChrome;
 			delete tempWin.Zutilo;
 		}
+		
+		Cc["@mozilla.org/intl/stringbundle;1"].
+			getService(Components.interfaces.nsIStringBundleService).flushBundles();
 	},
 	
 	checkIfUpgraded: function() {
@@ -118,7 +121,7 @@ var Zutilo = {
 		AddonManager.getAddonByID(Zutilo.id,
 			function(aAddon) {
 				if (lastVersion != aAddon.version) {
-					prefBranch.setCharPref('lastVersion',aAddon.version);
+					Zutilo.Prefs.set('lastVersion',aAddon.version);
 					
 					//lastVersion == '' for new install.  Don't show upgrade message
 					//to new users
