@@ -29,14 +29,9 @@ if ("undefined" == typeof(ZutiloChrome)) {
 
 ZutiloChrome.firefoxOverlay = {
 	init: function() {
-		var that = this;
-		window.setTimeout(function() { that.initPostLoad(); }, 500);
-	},
-	
-	initPostLoad: function() {
 		this.checkZoteroActive();
 		
-		ZutiloChrome.showUpgradeMessage();
+		window.setTimeout(function() { ZutiloChrome.showUpgradeMessage(); }, 500);
 	},
 	
 	checkZoteroActive: function() {

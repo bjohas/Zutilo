@@ -30,7 +30,7 @@ ZutiloChrome.showUpgradeMessage = function() {
 			window.openDialog('chrome://zutilo/content/zutiloUpgraded.xul', 
 			'zutilo-startup-upgradewindow', 'chrome,centerscreen',
 			{upgradeMessage: Zutilo.upgradeMessage});
-			
+		
 		//Clear message so it is not shown again on this run
 		Zutilo.upgradeMessage = '';
 	}

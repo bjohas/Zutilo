@@ -101,12 +101,11 @@ var Zutilo = {
 	},
 	
 	shutdown: function() {
+		Services.obs.notifyObservers(null, "zutilo-shutdown", null);
+	
 		var windows = Services.wm.getEnumerator('navigator:browser');
 		while (windows.hasMoreElements()) {
 			var tempWin = windows.getNext();
-			if (tempWin.ZutiloChrome.zoteroOverlay) {
-				tempWin.ZutiloChrome.zoteroOverlay.cleanup();
-			}
 			delete tempWin.ZutiloChrome;
 			delete tempWin.Zutilo;
 		}
